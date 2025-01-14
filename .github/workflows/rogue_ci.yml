@@ -129,6 +129,23 @@ jobs:
           cmake .. -DROGUE_INSTALL=local -DNO_PYTHON=1 -DSTATIC_LIB=1
           make -j4 install
 
+# ----------------------------------------------------------------------------
+
+  linter_build:
+    name: Clang-tidy Linter Build
+    runs-on: ubuntu-latest
+    steps:
+      # Install dependencies
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install doxygen doxygen-doc libzmq3-dev libboost-all-dev clang-tidy
+          pip install -r pip_requirements.txt
+      
+      - name: Build and Lint Rogue
+        run: |
+          cmake . -Bbuild -DROGUE_INSTALL=local -DCMAKE_CXX_CLANG_TIDY=clang-tidy -DCMAKE_C_CLANG_TIDY=clang-tidy
+          make -C build -j4 install
 
 # ----------------------------------------------------------------------------
 
